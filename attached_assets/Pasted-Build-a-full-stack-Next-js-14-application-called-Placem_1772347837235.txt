@@ -1,0 +1,117 @@
+Build a full-stack Next.js 14 application called "PlacementPath".
+
+Goal:
+This is a career analytics tool for tech students. 
+Users enter their GitHub username, and the app analyzes their profile and returns a Career Signal Report.
+
+Tech Requirements:
+- Use Next.js (App Router)
+- Use TypeScript
+- Use Tailwind CSS for styling
+- Create API route for backend logic
+- No database for now
+- Use GitHub public REST API
+- Keep UI clean and minimal
+- Responsive layout
+
+Core Flow:
+
+1. Homepage:
+- Title: "PlacementPath"
+- Subtitle: "AI-powered career signal analysis for tech students"
+- Input field for GitHub username
+- Analyze button
+- On submit → call /api/analyze endpoint
+- Show loading state
+
+2. Backend API:
+Create route: app/api/analyze/route.ts
+
+Logic:
+- Accept GitHub username from query params
+- Fetch user data from:
+  https://api.github.com/users/{username}
+- Fetch repos from:
+  https://api.github.com/users/{username}/repos?per_page=100
+
+Extract:
+- public_repos
+- followers
+- account age
+- repo stars (sum of stargazers_count)
+- languages used
+- last updated repo date
+
+3. Scoring Logic:
+
+Project Depth Score (0-25):
+- <5 repos → 5
+- 5–15 repos → 15
+- 15+ repos → 25
+
+Add bonus:
+- +5 if total stars > 10
+- +5 if 3+ languages used
+
+Consistency Score (0-15):
+- If updated in last 30 days → 15
+- If updated in last 90 days → 10
+- Otherwise → 5
+
+Overall Score:
+(Project + Consistency) × 2
+Return score out of 100.
+
+4. Response Format (JSON):
+{
+  overallScore,
+  projectScore,
+  consistencyScore,
+  repoCount,
+  totalStars,
+  languages,
+  lastUpdated
+}
+
+5. Results Page UI:
+Display:
+
+"Your Career Growth Snapshot"
+
+Overall Career Signal: XX/100
+
+Growth Stage:
+- 0–40 → Building Foundations
+- 41–70 → Emerging Developer
+- 71–100 → Strong Career Signal
+
+Sections:
+
+"What You're Doing Well"
+- Dynamic suggestions based on score
+
+"Where You Can Improve"
+- If repo count low → suggest building deeper projects
+- If low activity → suggest consistency
+
+"30-Day Upgrade Plan"
+Generate basic plan:
+Week 1–2: Improve one project
+Week 3: Add documentation + deployment
+Week 4: Refactor and polish
+
+6. Error Handling:
+- If GitHub username not found → show friendly error message
+- Handle API errors gracefully
+
+7. Keep code modular and clean:
+- Separate scoring logic into utility file
+- Use async/await
+- Add loading spinner
+- Good UI spacing
+- Use Tailwind styling
+
+This is version 0.1 MVP.
+Keep it simple, clean, and functional.
+Do not add authentication or database.
+Jot something down
